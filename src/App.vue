@@ -2,7 +2,7 @@
   <div id="app">
     <router-view />
     <p>黑马头条</p>
-    <div>
+    <div class="box">
       <i class="toutiao toutiao-shipin"></i>
     </div>
     <van-cell-group>
@@ -14,7 +14,16 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  methods: {
+    function () { }
+  }
 }
 </script>
-<style lang="less"></style>
+<style lang="less">
+.box {
+  background-color: pink;
+  width: 350px;
+  height: 75px;
+}
+</style>
