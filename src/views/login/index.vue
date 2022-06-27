@@ -53,6 +53,10 @@
         >
       </div>
     </van-form>
+    <van-notice-bar
+      left-icon="volume-o"
+      text="测试手机号13911111111，万能验证码246810"
+    />
   </div>
 </template>
 
@@ -64,8 +68,8 @@ export default {
     return {
       isCountDownShow: false,
       user: {
-        mobile: '13911111111',
-        code: '246810'
+        mobile: '',
+        code: ''
       },
       userFormRules: {
         mobile: [
