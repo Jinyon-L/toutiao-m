@@ -13,6 +13,7 @@ export const getItem = (name) => {
     return data
   }
 }
+// 删除
 export const removeItem = name => {
   window.localStorage.removeItem(name)
 }

@@ -10,7 +10,8 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 // Rem 布局适配
 import 'amfe-flexible'
-
+// dayjs
+import '@/utils/dayjs'
 Vue.use(Vant)
 Vue.config.productionTip = false
 

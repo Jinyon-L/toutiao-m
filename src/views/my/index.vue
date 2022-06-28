@@ -85,8 +85,7 @@ export default {
   methods: {
     onLogout () {
       this.$dialog.confirm({
-        title: '标题',
-        message: '弹窗内容'
+        title: '确定退出当前账号'
       })
         .then(() => {
           // on confirm
