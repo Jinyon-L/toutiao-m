@@ -16,26 +16,39 @@
         <ArticleList :channel="obj" />
       </van-tab>
       <div class="placeholder" slot="nav-right"></div>
-      <div class="more-btn" slot="nav-right">
+      <div class="more-btn" slot="nav-right" @click="show = true">
         <i class="toutiao toutiao-gengduo"></i>
       </div>
     </van-tabs>
+    <van-popup
+      v-model="show"
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '100%' }"
+    >
+      <ChannelEdit :myChannels="channels" :active="active" />
+    </van-popup>
   </div>
 </template>
 
 <script>
+
 import ArticleList from './components/article-list.vue'
+import ChannelEdit from './components/channel-edit.vue'
 import { getChannelsAPI } from '@/api'
 export default {
   name: 'HomePage',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   props: {},
   data () {
     return {
       active: 0,
-      channels: []
+      channels: [],
+      show: false
     }
   },
   computed: {},
@@ -46,7 +59,7 @@ export default {
   mounted () { },
   methods: {
     async getcha () {
-      try {
+      try { // 获取频道列表
         const { data } = await getChannelsAPI()
         this.channels = data.data.channels
       } catch (err) {
