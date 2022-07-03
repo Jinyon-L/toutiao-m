@@ -2,8 +2,14 @@
   <div class="chnannel-edit">
     <van-cell class="myChnannel">
       <div class="text" slot="title">我的频道</div>
-      <van-button slot="default" round size="mini" color="red" plain
-        >编辑</van-button
+      <van-button
+        slot="default"
+        round
+        size="mini"
+        color="red"
+        plain
+        @click="isEdit = !isEdit"
+        >{{ isEdit ? "完成" : "编辑" }}</van-button
       >
     </van-cell>
     <van-grid class="my-grid" :gutter="10">
@@ -11,8 +17,13 @@
         class="grid-item"
         v-for="(value, index) in myChannels"
         :key="index"
-        icon="clear"
+        @click="onMyChannelClick(value, index)"
       >
+        <van-icon
+          v-show="isEdit && !fixeChannels.includes(value.id)"
+          slot="icon"
+          name="clear"
+        />
         <span class="text" :class="{ active: index === active }" slot="text">{{
           value.name
         }}</span>
@@ -33,18 +44,23 @@
 </template>
 
 <script>
-import { getAllchannelsAPI } from '@/api'
+import { getAllchannelsAPI, getAddchannelAPI, deleteChannelAPI } from '@/api'
+import { mapState } from 'vuex'
+import { setItem } from '@/utils/storage'
 export default {
   data () {
     return {
       allChannels: [],
-      myChannels1: this.myChannels
+      myChannels1: this.myChannels,
+      isEdit: false,
+      fixeChannels: [0]
     }
   },
   computed: {
+    ...mapState(['user']),
     recommendChannels () {
-      return this.allChannels.filter(channels => {
-        return !this.myChannels.find(myChannels => {
+      return this.allChannels.filter((channels) => {
+        return !this.myChannels.find((myChannels) => {
           return myChannels.id === channels.id
         })
       })
@@ -65,6 +81,7 @@ export default {
   },
   methods: {
     async loadAllChannels () {
+      // 获取所有频道
       try {
         const { data } = await getAllchannelsAPI()
         this.allChannels = data.data.channels
@@ -72,9 +89,43 @@ export default {
         this.$toast('数据获取失败')
       }
     },
-    onAddChannel (channel) {
-      console.log(channel)
-      this.myChannels1.push(channel)
+    async onAddChannel (channel) {
+      // 添加我的频道
+      try {
+        this.myChannels1.push(channel)
+        if (this.user) {
+          await getAddchannelAPI([
+            {
+              id: channel.id,
+              seq: this.myChannels1.length
+            }
+          ])
+        } else {
+          setItem('CHANNEL', this.myChannels1)
+        }
+      } catch (err) { }
+    },
+    onMyChannelClick (value, index) {
+      // 删除我的频道
+      if (this.isEdit) {
+        if (this.fixeChannels.includes(value.id)) return
+        this.myChannels1.splice(index, 1)
+        this.deleteChannelFn(value.id)
+        if (index <= this.active) {
+          this.$emit('updata-active', this.active - 1, true)
+        }
+      } else {
+        this.$emit('updata-active', index, false)
+      }
+    },
+    async deleteChannelFn (id) {
+      try {
+        if (this.user) {
+          await deleteChannelAPI(id)
+        } else {
+          setItem('CHANNEL', this.myChannels1)
+        }
+      } catch (err) { }
     }
   }
 }
@@ -96,6 +147,9 @@ export default {
   }
   /deep/ .my-grid {
     .grid-item {
+      .van-grid-item__icon-wrapper {
+        position: unset;
+      }
       .van-icon-clear {
         position: absolute;
         right: -10px;

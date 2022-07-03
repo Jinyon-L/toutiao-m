@@ -27,13 +27,18 @@
       position="bottom"
       :style="{ height: '100%' }"
     >
-      <ChannelEdit :myChannels="channels" :active="active" />
+      <ChannelEdit
+        :myChannels="channels"
+        :active="active"
+        @updata-active="onUpdataActive"
+      />
     </van-popup>
   </div>
 </template>
 
 <script>
-
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 import ArticleList from './components/article-list.vue'
 import ChannelEdit from './components/channel-edit.vue'
 import { getChannelsAPI } from '@/api'
@@ -51,7 +56,9 @@ export default {
       show: false
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
   created () {
     this.getcha()
@@ -60,11 +67,22 @@ export default {
   methods: {
     async getcha () {
       try { // 获取频道列表
-        const { data } = await getChannelsAPI()
-        this.channels = data.data.channels
+        if (this.user) {
+          const { data } = await getChannelsAPI()
+          this.channels = data.data.channels
+        } else if (!getItem('CHANNEL')) {
+          const { data } = await getChannelsAPI()
+          this.channels = data.data.channels
+        } else {
+          this.channels = getItem('CHANNEL')
+        }
       } catch (err) {
         console.log('请求失败', err)
       }
+    },
+    onUpdataActive (index, show = true) {
+      this.active = index
+      this.show = show
     }
   }
 }
