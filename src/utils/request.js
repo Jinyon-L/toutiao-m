@@ -31,12 +31,22 @@ request.interceptors.response.use(
     return response
   },
   async function (error) {
-    console.log(error)
+    // try {
+    //   const refreshToken = await axios({
+    //     method: 'PUT',
+    //     url: 'http://toutiao.itheima.net/v1_0/authorizations',
+    //     headers: {
+    //       Authorization: `Bearer ${store.state.user.refresh_token}`
+    //     }
+    //   })
+    //   console.log(refreshToken)
+    // } catch (err) { }
+    // console.log(error)
     // 使用refresh_token获取新的token
     if (error.response.request.status === 401) {
-      console.log(store.state.user.refresh_token)
-      const refreshToken = store.state.user.refresh_token
-      console.log(refreshToken)
+      // console.log(store.state.user.refresh_token)
+      // const refreshToken = store.state.user.refresh_token
+      // console.log(refreshToken)
     }
   }
 )

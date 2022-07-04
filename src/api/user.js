@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 // 登录注册
 export const login = (data) => {
   return request({
@@ -7,6 +8,7 @@ export const login = (data) => {
     data
   })
 }
+
 // 发送验证码
 export const sendSms = (mobile) => {
   return request({

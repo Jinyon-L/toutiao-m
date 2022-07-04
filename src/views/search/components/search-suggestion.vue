@@ -1,6 +1,11 @@
 <template>
   <div class="search-suggestion">
-    <van-cell v-for="(text, index) in suggestions" :key="index" icon="search">
+    <van-cell
+      v-for="(text, index) in suggestions"
+      :key="index"
+      icon="search"
+      @click="$emit('search', text)"
+    >
       <div slot="title" v-html="highlight(text)"></div>
     </van-cell>
   </div>
@@ -41,7 +46,12 @@ export default {
     async getSearchFn (q) {
       try {
         const { data } = await getSearchAPI(q)
-        this.suggestions = data.data.options
+        const options = data.data.options
+        if (!options[0]) { // 后台数据options[0]存在null
+          this.suggestions = []
+          return
+        }
+        this.suggestions = options
       } catch (err) {
         this.$toast('请求失败')
       }

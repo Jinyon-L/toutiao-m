@@ -8,3 +8,11 @@ export const getSearch = q => {
     params: { q }
   })
 }
+// 获取搜索结果
+export const getSearchSesults = params => {
+  return request({
+    method: 'GET',
+    url: '/v1_0/search',
+    params
+  })
+}
