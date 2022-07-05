@@ -8,7 +8,16 @@ export const login = (data) => {
     data
   })
 }
-
+// 刷新用户token
+// export const refreshToken = () => {
+//   return request({
+//     method: 'PUT',
+//     url: '/v1_0/authorizations',
+//     headers: {
+//       Authorization: `Bearer ${store.state.user.refresh_token}`
+//     }
+//   })
+// }
 // 发送验证码
 export const sendSms = (mobile) => {
   return request({
