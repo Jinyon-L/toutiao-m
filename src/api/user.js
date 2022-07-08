@@ -32,37 +32,21 @@ export const getUserInfo = () => {
     url: '/v1_0/user'
   })
 }
-// 获取用户频道列表
-export const getChannels = () => {
-  return request({
-    method: 'get',
-    url: '/v1_0/user/channels'
-  })
-}
 
-// 获取所有频道列表
-export const getAllchannels = () => {
+// 关注用户
+export const addFollow = (target) => {
   return request({
-    method: 'get',
-    url: '/v1_0/channels'
-  })
-}
-
-// 添加用户频道
-export const getAddchannel = (channels) => {
-  return request({
-    method: 'PATCH',
-    url: '/v1_0/user/channels',
+    method: 'POST',
+    url: '/v1_0/user/followings',
     data: {
-      channels
+      target
     }
   })
 }
-
-// 删除用户频道
-export const deleteChannel = (channelid) => {
+// 取消关注用户
+export const deleteFollow = (target) => {
   return request({
     method: 'DELETE',
-    url: `/v1_0/user/channels/${channelid}`
+    url: `/v1_0/user/followings/${target}`
   })
 }
