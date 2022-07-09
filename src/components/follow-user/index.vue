@@ -1,4 +1,5 @@
 <template>
+  <!-- 关注组件 -->
   <van-button v-if="isFollowed" round :loading="loading" @click="onFollow"
     >已关注</van-button
   >
