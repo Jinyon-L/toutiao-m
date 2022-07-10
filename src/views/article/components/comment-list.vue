@@ -5,53 +5,67 @@
     finished-text="没有更多了"
     :error="error"
     error-text="加载失败, 请重试"
+    :immediate-check="false"
     @load="onLoad"
   >
-    <ArticleComment
+    <CommentItem
       v-for="(item, index) in list"
       :key="index"
       :comment="item"
+      @reply-click="$emit('reply-click', item)"
     />
   </van-list>
 </template>
 
 <script>
 import { getCommentsAPI } from '@/api'
-import ArticleComment from './comment-item.vue'
+import CommentItem from './comment-item.vue'
 export default {
   name: 'CommentList',
   components: {
-    ArticleComment
+    CommentItem
   },
   props: {
     source: {
       type: [Number, String, Object],
       required: true
+    },
+    list: {
+      type: Array,
+      default: () => []
+    },
+    type: {
+      type: String,
+      validator (value) {
+        return ['a', 'c'].includes(value)
+      },
+      default: 'a'
     }
   },
   data () {
     return {
-      list: [],
+      list1: this.list,
       loading: false,
       finished: false,
       error: false
     }
   },
   created () {
+    this.loading = true
     this.onLoad()
   },
   methods: {
     async onLoad () {
       try {
         const { data } = await getCommentsAPI({
-          type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-          source: this.source, // 源id，文章id或评论id
+          type: this.type, // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+          source: this.source.toString(), // 源id，文章id或评论id
           offset: this.offset,
           limit: this.limit
         })
-        console.log(data)
+        // console.log(data)
         const { results } = data.data
-        this.list.push(...results)
+        this.list1.push(...results)
         this.$emit('onload-success', data.data)
         this.loading = false
         if (results.length) {

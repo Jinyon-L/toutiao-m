@@ -2,7 +2,7 @@ import { login, sendSms, refreshToken, getUserInfo, addFollow, deleteFollow } fr
 import { getChannels, getAllchannels, getAddchannel, deleteChannel } from './channels'
 import { getArticles, getArticlesById, deleteCollect, addCollect, addLike, deleteLike } from './articles'
 import { getSearch, getSearchSesults } from './search'
-import { getComments } from './comment'
+import { getComments, addCommentLike, deleteCommentLike, addComment } from './comment'
 
 export const loginAPI = login
 export const refreshTokenAPI = refreshToken
@@ -23,3 +23,6 @@ export const addCollectAPI = addCollect
 export const addLikeAPI = addLike
 export const deleteLikeAPI = deleteLike
 export const getCommentsAPI = getComments
+export const addCommentLikeAPI = addCommentLike
+export const deleteCommentLikeAPI = deleteCommentLike
+export const addCommentAPI = addComment

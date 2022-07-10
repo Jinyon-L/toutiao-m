@@ -13,6 +13,8 @@
         class="like-btn"
         :color="comment.is_liking ? '#e5645f' : ''"
         :name="comment.is_liking ? 'good-job' : 'good-job-o'"
+        @click="onCommentLike"
+        :loading="commentLoading"
         >{{ comment.like_count || "赞" }}</van-icon
       >
     </div>
@@ -23,7 +25,7 @@
         <span class="comment-pubdate">{{
           comment.pubdate | relativeTime
         }}</span>
-        <van-button class="reply-btn" round
+        <van-button class="reply-btn" round @click="$emit('reply-click')"
           >回复 {{ comment.reply_count }}</van-button
         >
       </div>
@@ -32,6 +34,7 @@
 </template>
 
 <script>
+import { addCommentLikeAPI, deleteCommentLikeAPI } from '@/api'
 export default {
   name: 'CommentItem',
   components: {},
@@ -42,13 +45,29 @@ export default {
     }
   },
   data () {
-    return {}
+    return {
+      commentLoading: false,
+      comment1: this.comment
+    }
   },
   computed: {},
   watch: {},
   created () { },
   mounted () { },
-  methods: {}
+  methods: {
+    async onCommentLike () {
+      this.commentLoading = true
+      if (this.comment.is_liking) {
+        await deleteCommentLikeAPI(this.comment.com_id)
+        this.comment1.like_count--
+      } else {
+        await addCommentLikeAPI(this.comment.com_id)
+        this.comment1.like_count++
+      }
+      this.comment1.is_liking = !this.comment1.is_liking
+      this.commentLoading = false
+    }
+  }
 }
 </script>
 

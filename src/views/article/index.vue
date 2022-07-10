@@ -52,14 +52,21 @@
         <van-divider>正文结束</van-divider>
         <!-- 文章评论 -->
         <CommentList
+          :list="commmentList"
           :source="article.art_id"
           @onload-success="totalCommentCount = $event.total_count"
+          @reply-click="onReplyClick"
         />
         <!-- 文章评论 -->
 
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isPostShow = true"
             >写评论</van-button
           >
           <van-icon name="comment-o" :info="totalCommentCount" color="#777" />
@@ -75,6 +82,12 @@
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+
+        <!-- 评论 -->
+        <van-popup v-model="isPostShow" position="bottom">
+          <PostComment :target="article.art_id" @post-success="onPostSuccess" />
+        </van-popup>
+        <!-- 评论 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -92,6 +105,15 @@
         <van-button @click="loadArticle" class="retry-btn">点击重试</van-button>
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
+      <!-- 回复 -->
+      <van-popup v-model="isReplyShow" position="bottom" style="height: 90%">
+        <CommentReply
+          v-if="isReplyShow"
+          :comment="currentComment"
+          @close="isReplyShow = false"
+        />
+      </van-popup>
+      <!-- 回复 -->
     </div>
   </div>
 </template>
@@ -103,6 +125,8 @@ import FollowUser from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import LikeArticle from '@/components/like-article'
 import CommentList from './components/comment-list.vue'
+import PostComment from './components/comment-post.vue'
+import CommentReply from './components/comment-reply.vue'
 
 export default {
   name: 'ArticleIndex',
@@ -110,7 +134,14 @@ export default {
     FollowUser,
     CollectArticle,
     LikeArticle,
-    CommentList
+    CommentList,
+    PostComment,
+    CommentReply
+  },
+  provide: function () {
+    return {
+      articleId: this.articleId
+    }
   },
   props: {
     articleId: {
@@ -124,7 +155,11 @@ export default {
       loading: true,
       errStatus: 0,
       followLoading: false,
-      totalCommentCount: 0
+      totalCommentCount: 0,
+      isPostShow: false,
+      commmentList: [],
+      isReplyShow: false,
+      currentComment: {}
     }
   },
   computed: {},
@@ -144,10 +179,10 @@ export default {
         this.article = data.data
         // console.log(data.data)
         this.loading = false
-        setTimeout(() => {
-          // console.log(this.$refs['article-content'])
-          this.previewImage()
-        }, 0)
+        // setTimeout(() => {
+        //   // console.log(this.$refs['article-content'])
+        //   this.previewImage()
+        // }, 0)
       } catch (err) {
         if (err.response && err.errStatus === 404) {
           this.errStatus = 404
@@ -168,6 +203,15 @@ export default {
         })
       })
       // console.log(images)
+    },
+    onPostSuccess (data) {
+      this.isPostShow = false
+      this.commmentList.unshift(data.new_obj)
+    },
+    onReplyClick (item) {
+      // console.log(item)
+      this.currentComment = item
+      this.isReplyShow = true
     }
   }
 }
