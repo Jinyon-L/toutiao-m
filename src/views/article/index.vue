@@ -69,7 +69,12 @@
             @click="isPostShow = true"
             >写评论</van-button
           >
-          <van-icon name="comment-o" :info="totalCommentCount" color="#777" />
+          <van-icon
+            name="comment-o"
+            :info="totalCommentCount"
+            color="#777"
+            @click="commentClickFn"
+          />
           <CollectArticle
             v-model="article.is_collected"
             :article-id="article.art_id"
@@ -163,7 +168,8 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+  },
   created () {
     this.loadArticle()
   },
@@ -207,11 +213,23 @@ export default {
     onPostSuccess (data) {
       this.isPostShow = false
       this.commmentList.unshift(data.new_obj)
+      this.totalCommentCount++
     },
     onReplyClick (item) {
       // console.log(item)
       this.currentComment = item
       this.isReplyShow = true
+    },
+    // 点击评论图标视口滚动到评论位置
+    commentClickFn () {
+      const mainWrap = document.querySelector('.main-wrap')
+      const articleContent = document.querySelector('.article-content')
+      const articleHeight = articleContent.scrollHeight
+      // console.log(articleHeight)
+      mainWrap.scrollTo({
+        top: articleHeight,
+        behavior: 'smooth'
+      })
     }
   }
 }

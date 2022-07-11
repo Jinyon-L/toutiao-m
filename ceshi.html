@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        padding: 20px;
+      }
+      ul {
+        overflow-y: scroll;
+        border: 1px solid black;
+        width: 100px;
+        height: 100px;
+      }
+      div {
+        /* css多行文本超出隐藏 */
+        display: -webkit-box;
+        overflow: hidden; /* 超出部分隐藏  */
+        word-break: break-all; /* 自动换行 */
+        text-overflow: ellipsis; /* 超出部分显示省略号 */
+        /* 把块容器中的内容限制为指定的行数。
+        它只有在 display 属性设置成 -webkit-box 或者 -webkit-inline-box 
+        并且 -webkit-box-orient (en-US) 属性设置成 vertical时才有效果 */
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+    </style>
+  </head>
+  <body>
+    <ul class="boxF">
+      <li class="boxCh">
+        1111111111111111111111111111111111111111111111111111111111111111111111
+      </li>
+      <li class="boxCh2">
+        1234567890123456789012345678901234567890123456789012345678901234567890
+      </li>
+    </ul>
+    <button class="btn">按钮</button>
+    <script>
+      const boxF = document.querySelector('.boxF')
+      const boxCh = document.querySelector('.boxCh')
+      document.querySelector('.btn').addEventListener('click', function () {
+        const boxChCon = boxCh.scrollHeight // 获取第一个子元素的高度
+        console.log(boxChCon) // 第一个子元素（boxCh）的高
+        // 设置平滑滚动使视口滚动到第二个子元素的位置
+        boxF.scrollTo({
+          top: boxChCon,
+          behavior: 'smooth'
+        })
+      })
+    </script>
+  </body>
+</html>

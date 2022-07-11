@@ -7,7 +7,7 @@
           <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
-          <van-button size="mini" round>编辑资料</van-button>
+          <van-button size="mini" round to="/user-profile">编辑资料</van-button>
         </div>
       </div>
       <div class="data-stats">
@@ -99,7 +99,7 @@ export default {
       try {
         const { data } = await getUserInfoAPI()
         this.userInfo = data.data
-        console.log(this.userInfo)
+        // console.log(this.userInfo)
       } catch (err) { }
     }
   }

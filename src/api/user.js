@@ -25,11 +25,29 @@ export const sendSms = (mobile) => {
     url: `/v1_0/sms/codes/${mobile}`
   })
 }
+
 // 获取用户自己的信息
 export const getUserInfo = () => {
   return request({
     method: 'get',
     url: '/v1_0/user'
+  })
+}
+
+// 获取当前登录用户个人信息
+export const getUserProfile = () => {
+  return request({
+    method: 'GET',
+    url: '/v1_0/user/profile'
+  })
+}
+
+// 修改用户个人信息
+export const updateUserProfile = (data) => {
+  return request({
+    method: 'PATCH',
+    url: '/v1_0/user/profile',
+    data
   })
 }
 
