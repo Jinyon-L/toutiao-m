@@ -51,6 +51,15 @@ export const updateUserProfile = (data) => {
   })
 }
 
+// 编辑用户头像
+export const updateUserPhoto = (fd) => {
+  return request({
+    method: 'PATCH',
+    url: '/v1_0/user/photo',
+    data: fd
+  })
+}
+
 // 关注用户
 export const addFollow = (target) => {
   return request({
